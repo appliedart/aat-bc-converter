@@ -20,7 +20,7 @@
 		"docs": "https://github.com/appliedart/aat-bc-converter/blob/master/README.md"
 	},
 	"require": {
-		"craftcms/cms": "^3.3",
+		"craftcms/cms": "^3.3"
 	},
 	"autoload": {
 		"psr-4": {
