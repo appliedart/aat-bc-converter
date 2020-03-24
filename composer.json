@@ -1,0 +1,36 @@
+{
+	"name": "appliedart/aat-bc-converter",
+	"description": "Craft plugin for transforming exported BC Web App data.",
+	"version": "0.1.0",
+	"type": "craft-plugin",
+	"keywords": [
+		"data"
+	],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Applied Art",
+			"homepage": "https://appliedart.com"
+		}
+	],
+	"support": {
+		"email": "support@appliedart.com",
+		"issues": "https://github.com/appliedart/aat-bc-converter/issues?state=open",
+		"source": "https://github.com/appliedart/aat-bc-converter",
+		"docs": "https://github.com/appliedart/aat-bc-converter/blob/master/README.md"
+	},
+	"require": {
+		"craftcms/cms": "^3.3",
+	},
+	"autoload": {
+		"psr-4": {
+			"appliedart\\businesscatalyst\\": "src/"
+		}
+	},
+	"extra": {
+		"handle": "aat-bc-converter",
+		"name": "AAT Business Catalyst Converter",
+		"documentationUrl": "https://github.com/appliedart/aat-bc-converter/blob/master/README.md",
+		"class": "appliedart\\businesscatalyst\\BusinessCatalystDataPlugin"
+	}
+}
