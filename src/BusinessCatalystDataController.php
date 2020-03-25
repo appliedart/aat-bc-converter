@@ -60,7 +60,7 @@ class BusinessCatalystDataController extends Controller {
 		$headingsArray = $worksheet->rangeToArray('A1:' . $highestColumn . '1', null, true, true, true);
 		$headingsArray = $headingsArray[1];
 		$lowestRow = is_int($offset) && $offset > 0 ? 2 + $offset : 2;
-		$highestRow = is_int($limit) && $limit > 0 ? ($lowestRow + $limit - 1 <= $highestRow ? $lowestRow + $limit - 1 : $lowestRow - 1) : $highestRow;
+		$highestRow = is_int($limit) && $limit > 0 ? ($lowestRow < $highestRow ? $lowestRow + $limit - 1 : $lowestRow - 1) : $highestRow;
 
 		for ($row = $lowestRow; $row <= $highestRow; $row++) {
 			$dataRow = $worksheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, null, true, true, true);
