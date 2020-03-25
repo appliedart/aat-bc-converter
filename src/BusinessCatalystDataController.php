@@ -69,7 +69,24 @@ class BusinessCatalystDataController extends Controller {
 				foreach ($headingsArray as $columnKey => $columnHeading) {
 					$namedData[$columnHeading] = $dataRow[$row][$columnKey];
 				}
-				$data[] = &$namedData;
+
+				$travelDates = [];
+				for ($i = 1; $i <= 6; $i++) {
+					if (!empty($namedData["Start Date {$i}"])) {
+						$travelDate['startDate'] = $namedData["Start Date {$i}"];
+						$travelDate['endDate'] = $namedData["End Date {$i}"];
+
+						$travelDates[] = $travelDate;
+					}
+
+				}
+				$namedData['Travel Dates'] = $travelDates;
+
+				if (array_key_exists('Enabled', $namedData)) {
+					$namedData['Enabled'] = boolval($namedData['Enabled']);
+				}
+
+				$data[] = $namedData;
 			}
 		}
 
