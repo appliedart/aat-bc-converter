@@ -75,6 +75,7 @@ class BusinessCatalystDataController extends Controller {
 					if (!empty($namedData["Start Date {$i}"])) {
 						$travelDate['startDate'] = $namedData["Start Date {$i}"];
 						$travelDate['endDate'] = $namedData["End Date {$i}"];
+						$travelDate['range'] = $travelDate['startDate'] . (empty($travelDate['endDate']) ? '' : ' - ' . $travelDate['endDate']);
 
 						$travelDates[] = $travelDate;
 					}
