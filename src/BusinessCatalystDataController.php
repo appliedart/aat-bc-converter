@@ -84,7 +84,7 @@ class BusinessCatalystDataController extends Controller {
 				$namedData['Travel Dates'] = $travelDates;
 
 				if (array_key_exists('Enabled', $namedData)) {
-					$namedData['Enabled'] = boolval($namedData['Enabled']);
+					$namedData['Enabled'] = ($namedData['Enabled'] == 'Y');
 				}
 
 				if (array_key_exists('Location', $namedData)) {
