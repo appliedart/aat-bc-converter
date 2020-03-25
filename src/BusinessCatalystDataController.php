@@ -87,6 +87,18 @@ class BusinessCatalystDataController extends Controller {
 					$namedData['Enabled'] = boolval($namedData['Enabled']);
 				}
 
+				if (array_key_exists('Location', $namedData)) {
+					$namedData['Location'] = explode(',', $namedData['Location']);
+				}
+
+				if (array_key_exists('Season', $namedData)) {
+					$namedData['Season'] = explode(',', $namedData['Season']);
+				}
+
+				if (array_key_exists('Tags', $namedData)) {
+					$namedData['Tags'] = explode(',', $namedData['Tags']);
+				}
+
 				$data[] = $namedData;
 			}
 		}
