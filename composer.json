@@ -1,7 +1,7 @@
 {
 	"name": "appliedart/aat-bc-converter",
 	"description": "Craft plugin for transforming exported BC Web App data.",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"type": "craft-plugin",
 	"keywords": [
 		"data"

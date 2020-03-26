@@ -110,7 +110,7 @@ class BusinessCatalystDataController extends Controller {
 						if (!empty($path) && basename($path) != 'maps' && is_dir($path)) {
 							$files = scandir($path);
 							foreach ($files as $file) {
-								if (!preg_match('/^\./', $file) || is_file($path . DIRECTORY_SEPARATOR . $file)) {
+								if (!preg_match('/^\./', $file) && is_file($path . DIRECTORY_SEPARATOR . $file)) {
 									$namedData['Gallery Images'][] = $dir . DIRECTORY_SEPARATOR . $file;
 								}
 							}
