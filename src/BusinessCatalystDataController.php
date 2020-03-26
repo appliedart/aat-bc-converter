@@ -99,6 +99,27 @@ class BusinessCatalystDataController extends Controller {
 					$namedData['Tags'] = explode(',', $namedData['Tags']);
 				}
 
+				$namedData['Gallery Images'] = [];
+
+				try {
+					if (array_key_exists('Featured Image', $namedData) && !empty($namedData['Featured Image'])) {
+						$dir = dirname($namedData['Featured Image']);
+						$path = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . trim($dir, '/\\');
+						$path = realpath($path);
+
+						if (!empty($path) && basename($path) != 'maps' && is_dir($path)) {
+							$files = scandir($path);
+							foreach ($files as $file) {
+								if (!preg_match('/^\./', $file) || is_file($path . DIRECTORY_SEPARATOR . $file)) {
+									$namedData['Gallery Images'][] = $dir . DIRECTORY_SEPARATOR . $file;
+								}
+							}
+						}
+					}
+				} catch (Exception $e) {
+					// Fail silently
+				}
+
 				$data[] = $namedData;
 			}
 		}
