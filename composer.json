@@ -1,7 +1,7 @@
 {
 	"name": "appliedart/aat-bc-converter",
 	"description": "Craft plugin for transforming exported BC Web App data.",
-	"version": "0.3.1",
+	"version": "0.3.5",
 	"type": "craft-plugin",
 	"keywords": [
 		"data"
@@ -20,6 +20,7 @@
 		"docs": "https://github.com/appliedart/aat-bc-converter/blob/master/README.md"
 	},
 	"require": {
+		"phpoffice/phpspreadsheet": "^1.11",
 		"craftcms/cms": "^3.3"
 	},
 	"autoload": {
