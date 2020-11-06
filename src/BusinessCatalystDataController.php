@@ -38,6 +38,11 @@ class BusinessCatalystDataController extends Controller {
 						$response['success'] = true;
 						$response['message'] = 'Data processed successfully!';
 						break;
+					case 'TORO':
+						$response['nextpage'] = $this->processToroLive($worksheet, $data, $limit, $offset);
+						$response['success'] = true;
+						$response['message'] = 'Data processed successfully!';
+						break;
 					default:
 						$response['success'] = false;
 						$response['message'] = 'Invalid client code (' . $clientCode . ')!';
@@ -52,6 +57,61 @@ class BusinessCatalystDataController extends Controller {
 		$response['data'] =& $data;
 
 		return $this->asJson($response);
+	}
+
+	protected function processToroLive($worksheet, &$data, $limit=100, $offset=0) {
+		$priceColumns = [ 'US MSRP', 'US Standard Rental', 'US Co-op', 'CAN MSRP', 'Canadian Standard Rental', 'Canadian Co-op' ];
+
+		$highestRow = $worksheet->getHighestRow();
+		$highestColumn = $worksheet->getHighestColumn();
+		$headingsArray = $worksheet->rangeToArray('A1:' . $highestColumn . '1', null, true, true, true);
+		$headingsArray = $headingsArray[1];
+		$lowestRow = is_int($offset) && $offset > 0 ? 2 + $offset : 2;
+		$highestRow = is_int($limit) && $limit > 0 ? ($lowestRow < $highestRow ? $lowestRow + $limit - 1 : $lowestRow - 1) : $highestRow;
+
+		for ($row = $lowestRow; $row <= $highestRow; $row++) {
+			$dataRow = $worksheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, null, true, true, true);
+			if ((isset($dataRow[$row]['A'])) && ($dataRow[$row]['A'] > '')) {
+				$namedData = [];
+				foreach ($headingsArray as $columnKey => $columnHeading) {
+					$namedData[$columnHeading] = $dataRow[$row][$columnKey];
+				}
+				
+				$prices = [];
+
+				foreach ($priceColumns as $priceColumn) {
+					if (array_key_exists($priceColumn, $namedData)) {
+						$prices[] = [
+							'priceGroup' => $priceColumn,
+							'price' => $namedData[$priceColumn]
+						];
+					}
+				}
+
+				$namedData['prices'] = $prices;
+
+				$data[] = $namedData;
+			}
+		}
+
+		$path = \Craft::$app->request->getFullPath();
+		$pageUrl = \craft\helpers\UrlHelper::url($path);
+		$params = [];
+
+		if (is_int($limit) && $limit > 0) {
+			$params[] = 'limit=' . $limit;
+		} else {
+			// No limit means all records were read
+			$pageUrl = null;
+		}
+
+		if (!is_null($pageUrl)) {
+			$offset = is_int($offset) && $offset > 0 ? $offset + $limit : $limit;
+			$params[] = 'offset=' . $offset;
+			$pageUrl = $pageUrl . '?' . implode('&', $params);
+		}
+
+		return $lowestRow > $highestRow ? null : $pageUrl;
 	}
 
 	protected function processCountryTravelDiscoveries($worksheet, &$data, $limit=100, $offset=0) {
@@ -123,8 +183,6 @@ class BusinessCatalystDataController extends Controller {
 				$data[] = $namedData;
 			}
 		}
-
-
 
 		$path = \Craft::$app->request->getFullPath();
 		$pageUrl = \craft\helpers\UrlHelper::url($path);
