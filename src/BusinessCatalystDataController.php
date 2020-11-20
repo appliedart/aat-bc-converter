@@ -61,6 +61,12 @@ class BusinessCatalystDataController extends Controller {
 
 	protected function processToroLive($worksheet, &$data, $limit=100, $offset=0) {
 		$priceColumns = [ 'US MSRP', 'US Standard Rental', 'US Co-op', 'CAN MSRP', 'Canadian Standard Rental', 'Canadian Co-op' ];
+		$priceAccessMap = [
+			'US Standard Rental' => 'US Standard Rental',
+			'US Coop' => 'US Co-op',
+			'CAN Standard Rental' => 'Canadian Standard Rental',
+			'CAN Coop' => 'Canadian Co-op'
+		];
 
 		$highestRow = $worksheet->getHighestRow();
 		$highestColumn = $worksheet->getHighestColumn();
@@ -74,13 +80,19 @@ class BusinessCatalystDataController extends Controller {
 			if ((isset($dataRow[$row]['A'])) && ($dataRow[$row]['A'] > '')) {
 				$namedData = [];
 				foreach ($headingsArray as $columnKey => $columnHeading) {
+					if ($row == $lowestRow) {
+						$columnHeading = trim($columnHeading);
+						$headingsArray[$columnKey] = $columnHeading;
+					}
+
 					$namedData[$columnHeading] = $dataRow[$row][$columnKey];
 				}
-				
+
 				$prices = [];
+				$priceAccess = [];
 
 				foreach ($priceColumns as $priceColumn) {
-					if (array_key_exists($priceColumn, $namedData)) {
+					if (array_key_exists($priceColumn, $namedData) && is_numeric($namedData[$priceColumn])) {
 						$prices[] = [
 							'priceGroup' => $priceColumn,
 							'price' => $namedData[$priceColumn]
@@ -88,7 +100,19 @@ class BusinessCatalystDataController extends Controller {
 					}
 				}
 
+				foreach ($priceAccessMap as $old => $new) {
+					if (array_key_exists($old, $namedData) && strtoupper(trim($namedData[$old])) == 'X') {
+						$priceAccess[] = $new;
+					}
+				}
+
 				$namedData['prices'] = $prices;
+				$namedData['priceAccess'] = $priceAccess;
+
+				if (array_key_exists('ZipCodes', $namedData)) {
+					$namedData['ZipCodes'] = preg_split('/\s*,\s*/', $namedData['ZipCodes'], -1, PREG_SPLIT_NO_EMPTY);
+				}
+
 
 				$data[] = $namedData;
 			}
