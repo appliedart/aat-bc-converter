@@ -120,10 +120,12 @@ class BusinessCatalystDataController extends Controller {
 					$namedData['ZipCodes'] = preg_split('/\s*,\s*/', $namedData['ZipCodes'], -1, PREG_SPLIT_NO_EMPTY);
 				}
 
+				/*
 				$passwordColumn = array_key_exists('password', $columnLookupMap) ? $columnLookupMap['password'] : NULL;
 				if (!empty($passwordColumn)) {
 					$namedData[$passwordColumn] = $this->security->hashPassword($namedData[$passwordColumn]);
 				}
+				*/
 
 				$data[] = $namedData;
 			}
