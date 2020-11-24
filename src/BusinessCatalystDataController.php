@@ -9,8 +9,13 @@ use \Exception;
 
 class BusinessCatalystDataController extends Controller {
 	protected $allowAnonymous = true;
+	protected $security;
 
 	public function actionDataTransformer($clientCode, $dataType) {
+		if (!$this->security) {
+			$this->security = Craft::$app->getSecurity();
+		}
+
 		//$dataHandle = null;
 		$worksheet = null;
 		$data = [];
@@ -68,6 +73,7 @@ class BusinessCatalystDataController extends Controller {
 			'CAN Coop' => 'Canadian Co-op'
 		];
 
+		$columnLookupMap = [];
 		$highestRow = $worksheet->getHighestRow();
 		$highestColumn = $worksheet->getHighestColumn();
 		$headingsArray = $worksheet->rangeToArray('A1:' . $highestColumn . '1', null, true, true, true);
@@ -83,6 +89,7 @@ class BusinessCatalystDataController extends Controller {
 					if ($row == $lowestRow) {
 						$columnHeading = trim($columnHeading);
 						$headingsArray[$columnKey] = $columnHeading;
+						$columnLookupMap[strtolower($columnHeading)] = $columnHeading;
 					}
 
 					$namedData[$columnHeading] = $dataRow[$row][$columnKey];
@@ -113,6 +120,10 @@ class BusinessCatalystDataController extends Controller {
 					$namedData['ZipCodes'] = preg_split('/\s*,\s*/', $namedData['ZipCodes'], -1, PREG_SPLIT_NO_EMPTY);
 				}
 
+				$passwordColumn = array_key_exists('password', $columnLookupMap) ? $columnLookupMap['password'] : NULL;
+				if (!empty($passwordColumn)) {
+					$namedData[$passwordColumn] = $this->security->hashPassword($namedData[$passwordColumn]);
+				}
 
 				$data[] = $namedData;
 			}
