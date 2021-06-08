@@ -108,6 +108,10 @@ class BusinessCatalystDataController extends Controller {
 					$namedData['Enabled'] = ($namedData['Enabled'] == 'Y');
 				}
 
+				if (array_key_exists('Funeral Territory', $namedData)) {
+					$namedData['Funeral Territory'] = is_numeric($namedData['Funeral Territory']) ? $namedData['Funeral Territory'] : null;
+				}
+
 				if (array_key_exists('Show Contact Info', $namedData)) {
 					$namedData['Show Contact Info'] = ($namedData['Show Contact Info'] == 'Yes');
 				}
