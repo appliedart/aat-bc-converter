@@ -53,6 +53,11 @@ class BusinessCatalystDataController extends Controller {
 						$response['success'] = true;
 						$response['message'] = 'Data processed successfully!';
 						break;
+					case 'IDN':
+						$response['nextpage'] = $this->processGeneric($worksheet, $data, $limit, $offset);
+						$response['success'] = true;
+						$response['message'] = 'Data processed successfully!';
+						break;
 					default:
 						$response['success'] = false;
 						$response['message'] = 'Invalid client code (' . $clientCode . ')!';
@@ -90,6 +95,13 @@ class BusinessCatalystDataController extends Controller {
 					}
 
 					$namedData[$columnHeading] = $dataRow[$row][$columnKey];
+				}
+
+				$splitColumns = ['Counties', 'Hospitals'];
+				foreach ($splitColumns as $splitColumn) {
+					if (array_key_exists($splitColumn, $namedData)) {
+						$namedData[$splitColumn] = preg_split('/\s*,\s/', $namedData[$splitColumn]);
+					}
 				}
 
 				$data[] = $namedData;
