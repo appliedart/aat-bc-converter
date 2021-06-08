@@ -104,6 +104,14 @@ class BusinessCatalystDataController extends Controller {
 					}
 				}
 
+				if (array_key_exists('Enabled', $namedData)) {
+					$namedData['Enabled'] = ($namedData['Enabled'] == 'Y');
+				}
+
+				if (array_key_exists('Show Contact Info', $namedData)) {
+					$namedData['Show Contact Info'] = ($namedData['Show Contact Info'] == 'Yes');
+				}
+
 				$data[] = $namedData;
 			}
 		}
